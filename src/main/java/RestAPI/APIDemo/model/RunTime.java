@@ -7,7 +7,7 @@ public class RunTime extends Test {
 
     }
     public static void main(String[] args) {
-        Test test = new Test();
+        Test test = new RunTime();
 
         test.test1();
 

@@ -5,4 +5,6 @@ public class Entity {
     private Long id;
     private String entityName;
 
+    private String entityNumber;
+
 }
