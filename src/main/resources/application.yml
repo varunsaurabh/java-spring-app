@@ -1,0 +1,15 @@
+spring:
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6379
+  cache:
+    type: redis
+    cache-names:
+        - cache1
+        - cache2
+    redis:
+      key-prefix: 'api::'
+      # value in milliseconds
+      time-to-live: 60000

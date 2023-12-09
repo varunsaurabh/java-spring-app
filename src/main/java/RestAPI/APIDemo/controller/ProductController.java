@@ -18,6 +18,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping
+    public String getMessage(){
+        return "Application running via docker...";
+    }
+
     @PostMapping
     public void crateProduct(@RequestBody List<Product> productList){
         productService.saveProducts(productList);
@@ -36,15 +41,28 @@ public class ProductController {
         return productList;
     }
 
-    @PutMapping("/{product-id}")
+//    @PutMapping("/{product-id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public String updateProduct(@PathVariable("product-id")Long id, @RequestBody Product product){
+//        return productService.updateProduct(id, product);
+//    }
+
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public String updateProduct(@PathVariable("product-id")Long id, @RequestBody Product product){
-        return productService.updateProduct(id, product);
+    public String updateProduct(@RequestBody Product product){
+        return "Product with id: " + productService.updateProduct(product).getId() + " is updated!";
     }
 
     @DeleteMapping("/{product-id}")
     @ResponseStatus(HttpStatus.OK)
     public String deleteProductWithId(@PathVariable("product-id") Long id){
         return productService.deleteProductWithId(id);
+    }
+
+
+    @GetMapping("/evict")
+    @ResponseStatus(HttpStatus.OK)
+    public String cacheCleaning(){
+        return productService.cleanCache();
     }
 }

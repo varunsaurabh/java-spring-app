@@ -17,12 +17,21 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Cacheable(cacheNames = "products", key = "#id")
+//    @Cacheable(value = "product_name", unless="#result == null")
+
+//    Redis example below
+    @Cacheable(cacheNames = "cache1", key = "#id")
     public Product getProductById(Long id){
         System.out.println("fetching from db");
-    if(productRepository.findAll().size() > 0)
-        return productRepository.findById(id).get();
-    else return null;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if(productRepository.findAll().size() > 0 && productRepository.existsById(id))
+            return productRepository.findById(id).get();
+        else
+            return null;
     }
 
     public void saveProducts(List<Product> productList) {
@@ -34,8 +43,8 @@ public class ProductService {
         return new ArrayList<>(productRepository.findAll());
     }
 
-    @CachePut(cacheNames = "products", key="#product.id")
-    public String updateProduct(Long id, Product product) {
+//    @CachePut(cacheNames = {"product_name"}, key = "#product.id", unless="#result==null")
+    public Product updateProduct(Product product) {
 //        Product product1 = new Product();
 //        product1.setProductName(product.getProductName());
 //        product1.setProductPrice(product.getProductPrice());
@@ -43,18 +52,28 @@ public class ProductService {
 //
 //        productRepository.save(product1);
 
-        Product existingProduct = productRepository.findById(id).get();
-        existingProduct.setProductName(product.getProductName());
-        existingProduct.setProductPrice(product.getProductPrice());
-        existingProduct.setProductType(product.getProductType());
-        productRepository.save(existingProduct);
+//        Product existingProduct = productRepository.findById(id).get();
+//        existingProduct.setProductName(product.getProductName());
+//        existingProduct.setProductPrice(product.getProductPrice());
+//        existingProduct.setProductType(product.getProductType());
 
-        return "Product having id: " + id + " is updated successfully!";
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return productRepository.save(product);
     }
 
-    @CacheEvict(cacheNames = "products", key = "#id")
+//    @CacheEvict(cacheNames = {"product_name"}, allEntries = true)
     public String  deleteProductWithId(Long id) {
         productRepository.deleteById(id);
         return "Product having id: " + id + " is deleted successfully!";
+    }
+
+//    @CacheEvict(cacheNames = {"product_name"}, allEntries = true)
+    public String cleanCache(){
+        return "Cache cleaned...";
     }
 }
